@@ -1,0 +1,213 @@
+==============================================================
+Bước 0: Kiểm tra phiên bản Git
+==============================================================
+
+$ git --version
+git version 2.49.0.windows.1
+
+==============================================================
+Bước 1: Khởi tạo repository trống
+==============================================================
+
+$ mkdir my-project
+
+$ cd my-project
+
+$ git init -b main
+Initialized empty Git repository in D:/Rikkei/DevOps/Session4/_demo/bai1/my-project/.git/
+
+$ ls -la
+total 4
+drwxr-xr-x 1 gigabyte 197610 0 Oct  2 12:47 .
+drwxr-xr-x 1 gigabyte 197610 0 Oct  2 12:47 ..
+drwxr-xr-x 1 gigabyte 197610 0 Oct  2 12:47 .git
+
+$ git status
+On branch main
+
+No commits yet
+
+nothing to commit (create/copy files and use "git add" to track)
+
+==============================================================
+Bước 2: Trạng thái cấu hình TRƯỚC khi đặt danh tính
+==============================================================
+
+$ git config --local --list
+core.repositoryformatversion=0
+core.filemode=false
+core.bare=false
+core.logallrefupdates=true
+core.symlinks=false
+core.ignorecase=true
+
+$ git config --local user.name; echo "exit=$?"
+exit=1
+
+==============================================================
+Bước 3: Cấu hình danh tính ở cấp local (--local)
+==============================================================
+
+$ git config --local user.name "Lê Toàn"
+
+$ git config --local user.email "trinhhanh261293@gmail.com"
+
+$ git config --local user.email
+trinhhanh261293@gmail.com
+
+$ git config --local user.name
+Lê Toàn
+
+$ git config --local core.autocrlf false
+
+$ git config --local --list
+core.repositoryformatversion=0
+core.filemode=false
+core.bare=false
+core.logallrefupdates=true
+core.symlinks=false
+core.ignorecase=true
+core.autocrlf=false
+user.name=Lê Toàn
+user.email=trinhhanh261293@gmail.com
+
+$ git config --show-origin --show-scope user.email
+local	file:.git/config	trinhhanh261293@gmail.com
+
+$ cat .git/config
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+	autocrlf = false
+[user]
+	name = Lê Toàn
+	email = trinhhanh261293@gmail.com
+
+==============================================================
+Bước 4: Tạo tệp, đưa vào Staging Area
+==============================================================
+
+$ printf "# My Project\n\nDự án mẫu của Session 04, dùng để thực hành Git ở máy cục bộ.\n" > README.md
+
+$ printf "print(\"Xin chào, đây là dự án đầu tiên quản lý bằng Git!\")\n" > app.py
+
+$ ls -la
+total 6
+drwxr-xr-x 1 gigabyte 197610  0 Oct  2 12:47 .
+drwxr-xr-x 1 gigabyte 197610  0 Oct  2 12:47 ..
+drwxr-xr-x 1 gigabyte 197610  0 Oct  2 12:47 .git
+-rw-r--r-- 1 gigabyte 197610 97 Oct  2 12:47 README.md
+-rw-r--r-- 1 gigabyte 197610 75 Oct  2 12:47 app.py
+
+$ git status
+On branch main
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	README.md
+	app.py
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+$ git add README.md app.py
+
+$ git status
+On branch main
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+	new file:   README.md
+	new file:   app.py
+
+
+$ git diff --cached --stat
+ README.md | 3 +++
+ app.py    | 1 +
+ 2 files changed, 4 insertions(+)
+
+==============================================================
+Bước 5: Commit đầu tiên và đọc lịch sử
+==============================================================
+
+$ git commit -m "feat: khoi tao du an voi README va app.py"
+[main (root-commit) 83c8dc5] feat: khoi tao du an voi README va app.py
+ 2 files changed, 4 insertions(+)
+ create mode 100644 README.md
+ create mode 100644 app.py
+
+$ git status
+On branch main
+nothing to commit, working tree clean
+
+$ git log --oneline
+83c8dc5 feat: khoi tao du an voi README va app.py
+
+$ git log
+commit 83c8dc54d7ec6f77b310a1285da985f94e943f14
+Author: Lê Toàn <trinhhanh261293@gmail.com>
+Date:   Fri Oct 2 12:47:49 2026 +0700
+
+    feat: khoi tao du an voi README va app.py
+
+$ git show --stat HEAD
+commit 83c8dc54d7ec6f77b310a1285da985f94e943f14
+Author: Lê Toàn <trinhhanh261293@gmail.com>
+Date:   Fri Oct 2 12:47:49 2026 +0700
+
+    feat: khoi tao du an voi README va app.py
+
+ README.md | 3 +++
+ app.py    | 1 +
+ 2 files changed, 4 insertions(+)
+
+==============================================================
+Bước 6: Commit thứ hai (sửa README)
+==============================================================
+
+$ printf "\n## Cách chạy\n\nChạy chương trình bằng lệnh: python app.py\n" >> README.md
+
+$ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   README.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+$ git diff
+diff --git a/README.md b/README.md
+index 7ab5be5..1367b80 100644
+--- a/README.md
++++ b/README.md
+@@ -1,3 +1,7 @@
+ # My Project
+ 
+ Dự án mẫu của Session 04, dùng để thực hành Git ở máy cục bộ.
++
++## Cách chạy
++
++Chạy chương trình bằng lệnh: python app.py
+
+$ git add README.md
+
+$ git commit -m "docs: bo sung huong dan chay chuong trinh"
+[main dc36f2c] docs: bo sung huong dan chay chuong trinh
+ 1 file changed, 4 insertions(+)
+
+$ git log --oneline
+dc36f2c docs: bo sung huong dan chay chuong trinh
+83c8dc5 feat: khoi tao du an voi README va app.py
+
+$ git log --oneline --graph --decorate
+* dc36f2c (HEAD -> main) docs: bo sung huong dan chay chuong trinh
+* 83c8dc5 feat: khoi tao du an voi README va app.py
+
